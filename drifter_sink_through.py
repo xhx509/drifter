@@ -5,7 +5,7 @@ Created on Wed Aug 27 10:14:02 2014
 @author: hxu
 this progress extracts drifter data(coordinates) based on time range, geographic range or drifter id, then plot them.
 the first point of every drifter should be in this range.
-The ouput html file will be in same folder as this program. 
+The ouput html file will be named by 'sink_through.html' in same folder as this program. 
 input values: time period,gbox(maxlon, minlon,maxlat,minlat),or time period and id
 function uses: getobs_drift_byrange,getobs_drift_byidrange,colors,getobs_drift_byid,point_in_poly
 output : a plot html file to show drifter track on google map.
