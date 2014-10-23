@@ -14,10 +14,10 @@ output : a plot file to show drifter track.
 import datetime as dt
 import sys
 import os
-import pytz, pylab
+import pytz
 import numpy as np
 import matplotlib.pyplot as plt
-from hx import getobs_drift_byrange,colors,getobs_drift_byid,point_in_poly
+from drifter_functions import getobs_drift_byrange,colors,getobs_drift_byid,point_in_poly
 ops=os.defpath
 pydir='../'
 sys.path.append(pydir)
@@ -77,7 +77,7 @@ plt.title(str(time[0].strftime("%d-%b-%Y %H"))+'h')
 ax.patch.set_facecolor('lightblue')   #set background color
 
 plt.legend( numpoints=1,loc=2)  
-plt.savefig('./'+str(time[0].strftime("%d-%b-%Y %H"))+'h' + '.png')
+plt.savefig('./boxdrifter'+dt.datetime.now().strftime('%Y-%m-%d %H:%M') + '.png')
  
 #datetime_wanted=date2num(num2date(datetime_wanted)+datetime.timedelta( 0,step_size*60*60 ))
 plt.show()

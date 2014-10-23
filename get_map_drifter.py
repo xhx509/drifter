@@ -15,13 +15,13 @@ This use for plot track of drifter, use ctl file "getcodar_ctl.txt"
 #output values:gbox,id
 #function uses:getcodar_ctl_file,getdrift_raw
 ######################
-
+import datetime as dt
 import pygmaps
 import sys
 import numpy as np
 pydir='../'
 sys.path.append(pydir)
-from hx import getcodar_ctl_file,getdrift_raw
+from drifter_functions import getcodar_ctl_file,getdrift_raw
 
 ###############################################
 inputfilename='./getcodar_bydrifter_ctl.txt'
@@ -46,4 +46,4 @@ for x in range(num):
 
   #mymap.setgrids(37.42, 43.43, 0.1, -70.15, -60.14, 0.1)
 
-  mymap.draw('./'+str(id3))
+  mymap.draw('./'++dt.datetime.now().strftime('%Y-%m-%d %H:%M') +'.html')

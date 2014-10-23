@@ -17,7 +17,7 @@ import sys
 import os
 import pytz
 import numpy as np
-from hx import getobs_drift_byrange,getobs_drift_byid,point_in_poly,hexcolors
+from drifter_functions import getobs_drift_byrange,getobs_drift_byid,point_in_poly,hexcolors
 ops=os.defpath
 pydir='../'
 sys.path.append(pydir)
@@ -73,4 +73,4 @@ else:
     
 ranges=[(gbox[2],gbox[0]),(gbox[3],gbox[0]),(gbox[3],gbox[1]),(gbox[2],gbox[1]),(gbox[2],gbox[0])] #plot range you gave
 mymap.addpath(ranges,'red')#00FF00    
-mymap.draw('./sink_before.html')
+mymap.draw('./sink_before'+dt.datetime.now().strftime('%Y-%m-%d %H:%M')+'.html')

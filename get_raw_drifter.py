@@ -16,14 +16,14 @@ This use for plot track of drifter, use ctl file "getcodar_ctl.txt"
 #function uses:getcodar_ctl_file,getdrift_raw_range_latlon,getdrift_raw
 #############################################################
 from matplotlib.dates import date2num, num2date
-import datetime
+import datetime as dt
 import pylab
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 pydir='../'
 sys.path.append(pydir)
-from hx import getcodar_ctl_file,getdrift_raw_range_latlon,getdrift_raw
+from drifter_functions import getcodar_ctl_file,getdrift_raw_range_latlon,getdrift_raw
 from getcodar_bydrifter_ctl_py import getcodar_ctl_file_py
 
 
@@ -69,7 +69,7 @@ for x in range(num):
   ax.patch.set_facecolor('lightblue')   #set background color
 
   plt.legend( numpoints=1,loc=2)  
-  plt.savefig('./'+str(num2date(datetime_wanted).strftime("%d-%b-%Y %H"))+'h' + '.png')
+  plt.savefig('./'+dt.datetime.now().strftime('%Y-%m-%d %H:%M') +'.png')
  
   datetime_wanted=date2num(num2date(datetime_wanted)+datetime.timedelta( 0,step_size*60*60 ))
   plt.show()

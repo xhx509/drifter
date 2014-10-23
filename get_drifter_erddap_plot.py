@@ -17,7 +17,7 @@ import os
 import pytz, pylab
 import numpy as np
 import matplotlib.pyplot as plt
-from hx import getobs_drift_byrange,getobs_drift_byidrange,colors,getobs_drift_byid
+from drifter_functions import getobs_drift_byrange,getobs_drift_byidrange,colors,getobs_drift_byid
 ops=os.defpath
 pydir='../'
 sys.path.append(pydir)
@@ -60,7 +60,7 @@ pylab.xlim([min(lons)-(max(lons)-min(lons))/6.0,max(lons)+(max(lons)-min(lons))/
 ax.patch.set_facecolor('lightblue')   #set background color
 
 plt.legend( numpoints=1,loc=2)  
-plt.savefig('./'+str(time[0].strftime("%d-%b-%Y %H"))+'h' + '.png')
+plt.savefig('./'+dt.datetime.now().strftime('%Y-%m-%d %H:%M') + '.png')
  
 #datetime_wanted=date2num(num2date(datetime_wanted)+datetime.timedelta( 0,step_size*60*60 ))
 plt.show()

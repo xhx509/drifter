@@ -15,7 +15,7 @@ import datetime as dt
 import sys
 import os
 import pytz
-from hx import getobs_drift_byrange,getobs_drift_byid
+from drifter_functions import getobs_drift_byrange,getobs_drift_byid
 ops=os.defpath
 pydir='../'
 sys.path.append(pydir)
@@ -26,7 +26,7 @@ id=[135410701] # id list, if you are not clear dedicated id, let id=[]
 '125450842''125450841'
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑Input values↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑#
 
-f = open(str(gbox[3])+'.dat', 'w')  # create file and name it
+f = open(dt.datetime.now().strftime('%Y-%m-%d %H:%M')+'.dat', 'w')  # create file and name it
 f.writelines('id'+'                 '+'lat         '+' lon        '+'      time'+'   \n')
 if id==[]:
     time,ids,lat,lon=getobs_drift_byrange(gbox,input_time)  #get  and organize data

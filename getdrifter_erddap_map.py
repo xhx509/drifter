@@ -19,7 +19,7 @@ pydir='../'
 sys.path.append(pydir)
 import datetime as dt
 import pytz
-from hx import getobs_drift_byrange,colors,getobs_drift_byidrange,getobs_drift_byid
+from drifter_functions import getobs_drift_byrange,colors,getobs_drift_byidrange,getobs_drift_byid
 
 ###############################################
 #################Input values#############################################
@@ -64,5 +64,5 @@ else:
         mymap.addradpoint(lat[-1],lon[-1], 295, "blue")
         mymap.addpath(path,[50, 50, 0.0])#00FF00
         
-mymap.draw('./mymap.html')
+mymap.draw('./'+dt.datetime.now().strftime('%Y-%m-%d %H:%M') +'.html')
     
