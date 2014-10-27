@@ -12,7 +12,7 @@ Make sure to read process direction carefully before you run.
 
 Reference :http://www.nefsc.noaa.gov/drifter/
 
-There are flowcharts in this peckage to explan programs :
+There are flowcharts in this peckage to explain programs :
 
 <a href="https://github.com/xhx509/drifter/blob/master/get_drifter_erddap.png">get_drifter_erddap.png</a>
 
