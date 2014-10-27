@@ -2,9 +2,9 @@ drifter
 =========
 User can get ocean drifter data from erddap or raw by this program. 
 
-If you want to get drifter data by raw, please modify control file 'getdrifter_ctl.txt' first. 
+If you want to get drifter data by raw , please modify control file 'getdrifter_ctl.txt' first. 
 
-While you getting data from erddap, remember to modify hard code in process which you are going to run.
+While you getting data from erddap , remember to modify hard code in process which you are going to run.
 
 Some processes can save drifter data in a file , the others can plot them on pictures or html files.
 
