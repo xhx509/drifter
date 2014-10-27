@@ -24,7 +24,7 @@ sys.path.append(pydir)
 from drifter_functions import getcodar_ctl_file,getdrift_raw
 
 ###############################################
-inputfilename='./getcodar_bydrifter_ctl.txt'
+inputfilename='./getdrifter_ctl.txt'
 
 
 (datetime_wanted,filename,driftnumber,url,model_option,num,interval_dtime,interval,step_size)=getcodar_ctl_file(inputfilename)
