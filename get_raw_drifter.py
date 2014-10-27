@@ -29,7 +29,7 @@ from getcodar_bydrifter_ctl_py import getcodar_ctl_file_py
 
 ###############################################
 #  read a control file that has user-specified inputs
-inputfilename='./getcodar_bydrifter_ctl.txt'
+inputfilename='./getdrifter_ctl.txt'
 if inputfilename[-2:]=='py':
   (datetime_wanted,filename,driftnumber,url,model_option,num,interval_dtime,interval,step_size)=getcodar_ctl_file_py()
 else:
