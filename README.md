@@ -46,3 +46,7 @@ getdrifter_erddap.py&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  extract erddap drifter data 
 get_map_drifter.py&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  get raw drifter data and plot it on google map
 
 get_raw_drifter.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; get raw drifter data and plot it (not on google map)
+
+getdrifter_erddap_survive.py  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  count one type survive drifters and plot a graph
+
+getdrifter_erddap_survive_more.py &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  count several types survive drifters and plot a graph

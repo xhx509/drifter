@@ -9,6 +9,7 @@ Created on Wed Oct 10 15:23:37 2012
 #this is a functional package working for overlays program
 #########################################
 import math
+from math import radians, cos, sin, asin, sqrt
 import pandas as pd
 from dateutil.parser import parse
 #import matplotlib
@@ -102,7 +103,8 @@ def getcodar_ctl_file(inputfilename):
       url="http://tds.marine.rutgers.edu:8080/thredds/dodsC/cool/codar/totals/5Mhz_6km_realtime_fmrc/Maracoos_5MHz_6km_Totals-FMRC_best.ncd"
   return datetime_wanted,filename,driftnumber,url,model_option,num,interval_dtime,interval,step_size
 
-def nearxy(x,y,x0,y0): #find a point in points which we give nera the specified point, calculate dist
+def nearxy(x,y,x0,y0): #find a point in points which we give nera the specified point, calculate dist, not for coordinates
+    #lat1,lon1,lat2,lon2
     distance=[]
     for i in range(0,np.size(x)):
       for l in range(0,len(y)):
@@ -335,3 +337,63 @@ def hexcolors(n):
     for i in rgbcolors:
         hexcolor.append('#%02x%02x%02x' % i)         
     return hexcolor
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+
+    # 6367 km is the radius of the Earth
+    km = 6367 * c
+    return km 
+
+
+
+def get_coastline_coordinate(region):
+    path="" # Y:/bathy/"#give the path if these data files are store elsewhere
+    #if give the region, choose the filename
+    if region=='sne':
+        filename='/net/data5/jmanning/bathy/sne_coast.dat'
+    if region=='cc':
+        filename='/net/data5/jmanning/bathy/capecod_outline.dat'
+    if region=='bh':
+        filename='/net/data5/jmanning/bathy/bostonharbor_coast.dat'
+    if region=='cb':
+        filename='cascobay_coast.dat'
+    if region=='pb':
+        filename='penbay_coast.dat'
+    if region=='ma': # mid-atlantic
+        filename='/net/data5/jmanning/bathy/necscoast_noaa.dat'
+    if region=='ne': # northeast
+        filename='/net/data5/jmanning/bathy/necoast_noaa.dat'   
+    if region=='wv': # world vec
+        filename='/net/data5/jmanning/bathy/necscoast_worldvec.dat'        
+    
+    #open the data
+    f=open(path+filename)
+
+    lon,lat=[],[]
+    for line in f:#read the lat, lon
+	    lon.append(line.split()[0])
+	    lat.append(line.split()[1])
+    nan_location=[]
+    # plot the lat,lon between the "nan"
+    for i in range(len(lon)):#find "nan" location
+        if lon[i]=="nan":
+            nan_location.append(i)
+    lon_data,lat_data=[],[]
+    for m in range(1,len(nan_location)):#plot the lat,lon between nan
+        
+        for k in range(nan_location[m-1],nan_location[m]):
+            lat_data.append(float(lat[k]))
+            lon_data.append(float(lon[k]))
+            
+    return lat_data[1:], lon_data[1:]
