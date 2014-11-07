@@ -22,6 +22,8 @@ There are flowcharts in this peckage to explain programs :
 
 <a href="https://github.com/xhx509/drifter/blob/master/drifter_source_flowchart.png">drifter_source_flowchart.png</a>
 
+<a href="https://github.com/xhx509/drifter/blob/master/getdrifter_erddap_survive.png">getdrifter_erddap_survive.png</a>
+
 
 
 
