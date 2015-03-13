@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  6 10:03:59 2014
+Created on Wed Mar 11 16:05:44 2015
 
 @author: hxu
+
 """
 """
 it used for getting drifter survive information from erddap based on id_list and time_period ()
@@ -39,8 +40,8 @@ ids=[['55291','55292']\
 ,['130410703', '130410704', '130410705', '130410708', '138410701']]
 '''
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑Input values↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑#
-
-drifter_name=['Rachel','Eddie','Cassie','Irina']  # names of 4 subplots , they can be changed
+drifter_name=['Rachel','Eddie','Cassie','Irina']
+drifter_type=['plastic', '2x4wood', 'bamboo', 'aluminum']  # names of 4 subplots , they can be changed
 fig, axes = plt.subplots(nrows=2, ncols=2)
 axes = axes.ravel()  #get axes
 for y in range(len(ids)):
@@ -68,24 +69,37 @@ for y in range(len(ids)):
                 every_time_total.append(date2num(time[-1])-date2num(time[0]))
                 totalday=totalday+date2num(time[-1])-date2num(time[0])  
                 total_drifter+=1 # get number of total ploted drifters
-        drifter_n,index_day=[],[]    
-        for i in range(15): #set y columns to 30 columns
+        drifter_n,index_day=[],[];  
+        for i in range(1,15): #set y columns to 30 columns
              drifter_n.append(len([x for x in every_time_total if (20*i+20)>x >= (20*i)]))
              index_day.append(str(20*i)+'-'+str(20*i+20))  # for setting y label
-         
-        df=DataFrame(np.array(drifter_n),index=index_day,columns=[drifter_name[y]])  # generate a dataframe
+        shortterm_drifter_n= len([w for w in every_time_total if (20)>w >= (0)])
+        totalday20=sum([w for w in every_time_total if (20)>w >= (0)])
+        df=DataFrame(np.array(drifter_n),index=index_day,columns=[drifter_type[y]])  # generate a dataframe
         ax=axes[y]
         #df.plot(ax=axes[y],title=drifter_name[y],color='r')
-        df.plot(ax=axes[y],kind='bar',title=drifter_name[y],ylim=[0,40])  #plot graph
-     
-        ax.text(0.5, 0.8, 'average '+str(round(totalday/(q+1),1))+' days'+'\nTotal drifters #'+str(total_drifter)+'\nnot including '+str(len(id)-total_drifter)+' drifters ashore',
+        #df.plot(ax=axes[y],kind='bar',title=drifter_name[y],ylim=[0,50])  #plot graph
+        df.plot(ax=axes[y],kind='bar',ylim=[0,50])
+        '''
+        ax.text(0.5, 0.8, 'average '+str(round((totalday-totalday20)/(sum(drifter_n)),1))+' days'+'\nTotal drifters #'+str(total_drifter-shortterm_drifter_n)+'\nnot including '+str(len(id)-total_drifter)+' drifters ashore\n or '+str(shortterm_drifter_n)+' drifters surviving less than 20 days',
             verticalalignment='top', horizontalalignment='center',
             transform=ax.transAxes,
             color='green', fontsize=25)
-           
-        ax.set_xlabel('days_period',fontsize=25)   # set label
+        '''       
+        ax.text(0.5, 0.92, 'average '+str(round((totalday-totalday20)/(sum(drifter_n)),1))+' days'+'\nTotal drifters #'+str(total_drifter-shortterm_drifter_n)+'\n',
+            verticalalignment='top', horizontalalignment='center',
+            transform=ax.transAxes,
+            color='green', fontsize=25)
+        ax.text(0.5, 0.8, '\n\nnot including '+str(len(id)-total_drifter)+' drifters ashore\n or '+str(shortterm_drifter_n)+' drifters surviving less than 20 days',
+            verticalalignment='top', horizontalalignment='center',
+            transform=ax.transAxes,
+            color='green', fontsize=16)
+        ax.set_title(drifter_name[y], fontsize=26)    
+        ax.set_xlabel('survival period (days)',fontsize=25)   # set label
         if y==0 or 2:
-           ax.set_ylabel('# drifter',fontsize=25)
+            ax.set_ylabel('# drifter',fontsize=25)
+        else:
+            ax.set_ylabel('',fontsize=25)
         #ax.add(rplot.TrellisGrid(['sex', 'smoker']))
         plt.gcf().autofmt_xdate()
         #plt.savefig('EDDIE.png')
