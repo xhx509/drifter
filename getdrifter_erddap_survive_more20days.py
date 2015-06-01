@@ -6,13 +6,14 @@ Created on Wed Mar 11 16:05:44 2015
 
 """
 """
-it used for getting drifter survive information from erddap based on id_list and time_period ()
+it used for getting drifter survive information(not include drifter less than 20 days or ashore) from erddap based on id_list and time_period ()
 Before running this program, ask Huanxin to get drifter id from 'nova' service
 After running this program, it could plot a graph of drifter survive. And you could save that by yourself
 input values: time period,ids
 function uses:getobs_drift_byid, getobs_drift_byrange, haversine,get_coastline_coordinate
 output : a plot with average days and total drifters 
 """
+import time
 import datetime as dt
 import sys
 import os
@@ -42,7 +43,7 @@ ids=[['55291','55292']\
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑Input values↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑#
 drifter_name=['Rachel','Eddie','Cassie','Irina']
 drifter_type=['plastic', '2x4wood', 'bamboo', 'aluminum']  # names of 4 subplots , they can be changed
-fig, axes = plt.subplots(nrows=2, ncols=2)
+fig, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,12))
 axes = axes.ravel()  #get axes
 for y in range(len(ids)):
     
@@ -79,7 +80,8 @@ for y in range(len(ids)):
         ax=axes[y]
         #df.plot(ax=axes[y],title=drifter_name[y],color='r')
         #df.plot(ax=axes[y],kind='bar',title=drifter_name[y],ylim=[0,50])  #plot graph
-        df.plot(ax=axes[y],kind='bar',ylim=[0,50])
+        #plt.setp( ax,xticks=np.arange(len(temp_r_std)),xticklabels=temp_r_std )        
+        df.plot(ax=axes[y],kind='bar',ylim=[0,35])
         '''
         ax.text(0.5, 0.8, 'average '+str(round((totalday-totalday20)/(sum(drifter_n)),1))+' days'+'\nTotal drifters #'+str(total_drifter-shortterm_drifter_n)+'\nnot including '+str(len(id)-total_drifter)+' drifters ashore\n or '+str(shortterm_drifter_n)+' drifters surviving less than 20 days',
             verticalalignment='top', horizontalalignment='center',
@@ -96,13 +98,20 @@ for y in range(len(ids)):
             color='green', fontsize=16)
         ax.set_title(drifter_name[y], fontsize=26)    
         ax.set_xlabel('survival period (days)',fontsize=25)   # set label
-        if y==0 or 2:
+        ax.set_ylim([0,35])
+        if y%2==0:
             ax.set_ylabel('# drifter',fontsize=25)
-        else:
-            ax.set_ylabel('',fontsize=25)
+        if y%2==1:
+            plt.setp(ax.get_yticklabels(), visible=False)
+         #   ax.set_ylabel('',fontsize=25)
         #ax.add(rplot.TrellisGrid(['sex', 'smoker']))
         plt.gcf().autofmt_xdate()
         #plt.savefig('EDDIE.png')
-#plt.tight_layout()   
-plt.savefig('1980-'+input_time.strftime("%Y"))
+#plt.setp(ax.get_yticklabels(), visible=False)
+#plt.tight_layout()  
+#setp(ax.get_yticklabels(), visible=False) 
+#plt.title('drifters survive from 1980-'+input_time[1].strftime("%Y"))
+mng = plt.get_current_fig_manager()
+mng.window.showMaximized()
+plt.savefig('1980-'+input_time[1].strftime("%Y"))
 plt.show()

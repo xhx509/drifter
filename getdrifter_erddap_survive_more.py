@@ -41,7 +41,7 @@ ids=[['55291','55292']\
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑Input values↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑#
 
 drifter_name=['Rachel','Eddie','Cassie','Irina']  # names of 4 subplots , they can be changed
-fig, axes = plt.subplots(nrows=2, ncols=2)
+fig, axes = plt.subplots(nrows=2, ncols=2,figsize=(20,12))
 axes = axes.ravel()  #get axes
 for y in range(len(ids)):
     
@@ -84,8 +84,10 @@ for y in range(len(ids)):
             color='green', fontsize=25)
            
         ax.set_xlabel('days_period',fontsize=25)   # set label
-        if y==0 or 2:
-           ax.set_ylabel('# drifter',fontsize=25)
+        if y%2==0:
+            ax.set_ylabel('# drifter',fontsize=25)
+        if y%2==1:
+            plt.setp(ax.get_yticklabels(), visible=False)
         #ax.add(rplot.TrellisGrid(['sex', 'smoker']))
         plt.gcf().autofmt_xdate()
         #plt.savefig('EDDIE.png')
