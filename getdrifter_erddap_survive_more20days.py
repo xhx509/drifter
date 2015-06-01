@@ -104,4 +104,5 @@ for y in range(len(ids)):
         plt.gcf().autofmt_xdate()
         #plt.savefig('EDDIE.png')
 #plt.tight_layout()   
+plt.savefig('1980-'+input_time.strftime("%Y"))
 plt.show()
