@@ -20,9 +20,11 @@ import sys
 
 ## Name of input file
 #filename=sys.argv[1]
-filename='drift_ep_2014_31.dat'
+filename='drift_X.dat'
+u=urllib2.urlopen('http://www.nefsc.noaa.gov/drifter/'  + filename)
+#filename='drift_ep_2014_31.dat'
 #Name of output file
-out_file = filename[0:-4] + "_new.kml"
+out_file = filename[0:-4] + ".kml"
 ids=[]
 verts=[]
 vertid=[]
@@ -36,7 +38,7 @@ body = ""
 ## KML footer
 footer = ("</Document>\n</kml>\n")
 
-u=open(filename)
+#u=open(filename)
 #u=urllib2.urlopen('http://www.nefsc.noaa.gov/drifter/'  + filename)
     # bring the file into python and change it's extension to '.csv'
 localfile = open ('filename', 'w')
@@ -62,7 +64,22 @@ with open('filename','rb') as f:
 year = "2015"
 #color for lines
 #color=('b','g','r','k','w','y')
-color=('ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699','','','','','','','','','','','','','','','',)
+color=('ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699',
+       'ff0000ff','ffffffff','ffff0000','ff330066','ff33ffff','ffccff33','ff660099','ffff0099','ff33ccff','ffcc6699','','','','','','','','','','','','','','','',)
 #color=('#FF0000', 'ffffffff', 'ffff0000', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#99CC66', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072', '#FF0000', '#f5f5f5', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072', '#008080', '#FF0000', '#99CC66', '#3333CC', '#FF66FF', '#660033', '#FFFF33', '#33FFCC', '#990066', '#9900FF', '#FFCC33', '#9966CC', '#33FFFF', '#FF00CC', '#2e8b57', '#99CC66', '#f5f5f5', '#fa8072', '#008080', '#9acd32', '#800080', '#dda0dd', '#ffa500', '#000080', '#48d1cc', '#ff00ff', '#2e8b57', '#f5f5f5', '#fa8072')
 #color=('64FFFFFF','641400FF','6414F0FF','6414F000','64F0FF14','641478FF','6414B4FF','6478FFF0','6400783C','64000000','6478AAF0','','','','','',)
 #color=('64FFFFFF', '641400FF', '6414F000', '6414F0FF', '647800F0', '23E678B4','508C783C','501E7878','5078FFF0','23000000', '23FFFFFF', '2314F000', '231400FF', '2378003C', '23783CF0', '23E678B4','508C783C','501E7878','5078FFF0')
@@ -132,6 +149,6 @@ kmlOutput = header + body + footer
 
 ## Write file
 
-f = open('/home/hxu/ed/'+out_file, 'w')
+f = open('/net/nwebserver/drifter/'+out_file, 'w')
 f.write (kmlOutput)
 f.close()
