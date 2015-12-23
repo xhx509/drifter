@@ -140,7 +140,7 @@ def getobs_drift_byrange(gbox,input_time):
     +str(lat_min)+'&latitude<='+str(lat_max)+'&longitude>='+str(lon_min)+'&longitude<='+str(lon_max)+'&orderBy("id,time")'
     df=pd.read_csv(url,skiprows=[1])
     for k in range(len(df)):
-       df.time[k]=parse(df.time[k])
+       df.time.values[k]=parse(df.time.values[k])
     return df.time.values,df.id.values,df.latitude.values,df.longitude.values
 
 
@@ -160,7 +160,7 @@ def getobs_drift_byid(id,input_time):
     +str(mintime)+'&time<='+str(maxtime)+'&id="'+str(id)+'"&orderBy("time")'
     df=pd.read_csv(url,skiprows=[1])
     for k in range(len(df)):
-       df.time[k]=parse(df.time[k])
+       df.time.values[k]=parse(df.time.values[k])
     df=df[df.longitude <=-20]
     return df.time.values,df.id.values,df.latitude.values,df.longitude.values
     
@@ -397,3 +397,4 @@ def get_coastline_coordinate(region):
             lon_data.append(float(lon[k]))
             
     return lat_data[1:], lon_data[1:]
+print 's'
