@@ -13,7 +13,7 @@ Before running this program, ask Huanxin to get drifter id from 'nova' service
 After running this program, it could plot a graph of drifter survive. And you could save that by yourself
 input values: time period,ids
 function uses:getobs_drift_byid, getobs_drift_byrange, haversine,get_coastline_coordinate
-output : a plot with average days and total drifters 
+output : a plot with average days and total drifters, image name is 'drift_survive_all.png'
 """
 import datetime as dt
 import sys
