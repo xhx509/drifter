@@ -35,7 +35,7 @@ critfactor=8 #multiple of the mean velcity to discard
 minla=-20;maxla=70;minlo=-150;maxlo=20  # delimiting data to make it easier (we probably will not change this ever)
 bathy=True # set to "True" if isobaths are wanted
 timetoedit=5 #number of seconds to click on bad points (set to 10 first run through)
-fn='drift_scotland_2015_1.dat'
+fn='drift_ssnsc_2015_1.dat'
 #fn='drift_tcs_2014_1.dat'
 testfile = urllib.URLopener()
 testfile.retrieve("http://www.nefsc.noaa.gov/drifter/"+fn, fn)
