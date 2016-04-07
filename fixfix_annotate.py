@@ -34,8 +34,9 @@ from mpl_toolkits.basemap import Basemap
 critfactor=8 #multiple of the mean velcity to discard
 minla=-20;maxla=70;minlo=-150;maxlo=20  # delimiting data to make it easier (we probably will not change this ever)
 bathy=True # set to "True" if isobaths are wanted
-timetoedit=5 #number of seconds to click on bad points (set to 10 first run through)
-fn='drift_ssnsc_2015_1.dat'
+timetoedit=20 #number of seconds to click on bad points (set to 10 first run through)
+fn='drift_gomi_2015_2'+'.dat'
+
 #fn='drift_tcs_2014_1.dat'
 testfile = urllib.URLopener()
 testfile.retrieve("http://www.nefsc.noaa.gov/drifter/"+fn, fn)
@@ -51,8 +52,9 @@ fid=open("/home/hxu/github/drifter/drift.log","a")
 
 direcin="/home/hxu/github/drifter/" # directory where the final plots are stored
 newpath = r'/home/hxu/github/drifter/'+fn[6:-11]+'/'+fn.split('_')[2] 
+prep_ora=r'/home/hxu/github/drifter/prep_oracle'
+if not os.path.exists(prep_ora): os.makedirs(prep_ora)
 if not os.path.exists(newpath): os.makedirs(newpath)
-
 direcout='/home/hxu/github/drifter/'+fn[6:-11]+'/'+fn.split('_')[2]
 #direcout='/net/data5/jmanning/drift/tcs/2014'
 
@@ -137,8 +139,8 @@ minutes_all=[int(i) for i in minutes_all]
 idss=[int(i) for i in idss]
 id=[int(i) for i in id]
   
-fido=open(direcout+'/prep_for_oracle_'+fn[6:],'w')
-
+#fido=open(direcout+'/prep_for_oracle_'+fn[6:],'w')
+fido=open(prep_ora+'/prep_for_oracle_'+fn[6:],'w')
 ids=np.sort(id)
 
 
@@ -165,6 +167,16 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
             temp.append(temps[i])
     print "there are ", len(lat), " fixes for id =",ids[k]          
     print "Note: Check to see if any of these already exist in database before loading"
+    #add 1st plot for track without any fix
+    fig=plt.figure() 
+    plt.plot(lon,lat,'ro-')
+    firstpic_save=raw_input('Do you want to save this original(without fix) plot?  y or n')
+    plt.title(str(ids[k])+'original plot')
+    
+    if firstpic_save=='y' or firstpic_save=='Y':
+        plt.savefig(newpath+'pth_'+str(ids[k])+'_origin'+".ps")
+        print 'original track'+str(ids[k])+'has been saved'
+    
 
     # STEP 1a: check for repeat time
     ###### while time[i]==time[i-1], get the del_same_time_index ########
@@ -262,7 +274,10 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
            plt.close()
         plt.close() 
         
-        
+     
+     
+     
+     
      idgood=len(lat)
      fu,fv,spd1,jd1=ll2uv(time,lat,lon)
      jd1=[i/1000. for i in jd1 ]
@@ -330,8 +345,11 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
           index_betweens=[]
           for i in range(sorted(index_between_badpoints)[0],sorted(index_between_badpoints)[1]+1):
               index_betweens.append(i)
+          del    lat[index_betweens[-1]+1],lon[index_betweens[-1]+1],time[index_betweens[-1]+1],yeardays[index_betweens[-1]+1],depth[index_betweens[-1]+1],temp[index_betweens[-1]+1] 
           for i in index_betweens[::-1]:
+                  
               del lat[i],lon[i],time[i],yeardays[i],depth[i],temp[i]
+              
           del_between_badpoints=sorted(index_between_badpoints)[1]-sorted(index_between_badpoints)[0]+1
           badpoints_num=len(badpoints)+del_between_badpoints
           print "%10.2f percent editted due to bad velocities from manual clicks between two points" % float(float(badpoints_num)/len(time)*100.)
@@ -349,7 +367,7 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
      plt.title(str(ids[k]))
      plt.show()
      print 'pausing for '+str(timetoedit)+' seconds'
-     pause(1)
+     pause(timetoedit)
      plt.close()
 
 
@@ -440,7 +458,8 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
      #plot time, lat,lon
      fig=plt.figure()
      ax = fig.add_subplot(111)
-     print 'skipping basemap_usgs using standard if big plot (>1 deg lat or lon range)'
+     #print 'skipping basemap_usgs using standard if big plot (>1 deg lat or lon range)'
+            
      #print min(lat),min(lon),max(lat),max(lon)
      if (max(lon)-min(lon)>1) and (max(lat)-min(lat)>1) :
        #basemap.basemap_standard([int(min(lat)-1),int(max(lat))+1],[int(min(lon)-1),int(max(lon))+1],[1.0])#,(float(min(max(lat)-min(lat),max(lon)-min(lon)))+1.0)/5*4)
@@ -454,6 +473,18 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
             interval_lat=int(round((max(lat)-min(lat))/7))
             
         draw_basemap(fig, ax, lon, lat, interval_lon, interval_lat)
+        
+     else:
+        lonsize=[];latsize=[] 
+        interval_lat=0.25;interval_lon=0.25
+        [lonsize.append(i) for i in lon]
+        lonsize.append(max(lon)+0.5)
+        lonsize.append(min(lon)-0.5)
+        [latsize.append(i) for i in lat]
+        latsize.append(min(lat)-0.5)
+        latsize.append(max(lat)+0.5)
+        draw_basemap(fig, ax, lonsize, latsize, interval_lon, interval_lat)
+        
     #else:  
       #basemap.basemap_detail(lat,lon,bathy, False,float(min(max(lat)-min(lat),max(lon)-min(lon)))/5*4)
       #basemap.basemap_usgs(lat,lon,False)#,depcont)
@@ -503,7 +534,9 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
                print textxy(lon[i-xy_t],lat[i-xy_t],lon[i+xy_t],lat[i+xy_t],len_arrow),time[i]
      
      '''
+     
      print 'past basemap'
+     
      ax.plot(lon,lat,marker=".",markerfacecolor='r',markersize=10)
      points_num=10
      self_annotate1=ax.annotate("End", xy=(lon[-1], lat[-1]),xycoords='data', xytext=(-32, -32), 
@@ -522,16 +555,19 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
             if num2date(time[i-1]).day<>num2date(time[i]).day:
                 self_annotate4=ax.annotate(num2date(time[i]).replace(tzinfo=None).strftime('%d-%b'), xy=(lon[i], lat[i]),
                                           xycoords='data', xytext=(8, 11),color='black', textcoords='offset points',arrowprops=dict(arrowstyle="->"))
+     
      else: # place approximately 10 labels
         for i in range(1,len(time),int(len(time)/10.)):
            #if num2date(time[i-1]).day<>num2date(time[i]).day:
            self_annotate4=ax.annotate(num2date(time[i]).replace(tzinfo=None).strftime('%d-%b'), xy=(lon[i], lat[i]),
-                                          xycoords='data', xytext=(textxy(lon[i-1],lat[i-1],lon[i+1],lat[i+1],20)), color='grey', textcoords='offset points',arrowprops=dict(arrowstyle="->"))          #      self_annotate4.draggable() #drag the text if you want     
+                                          xycoords='data', xytext=(textxy(lon[i-1],lat[i-1],lon[i],lat[i],20)), color='grey', textcoords='offset points',arrowprops=dict(arrowstyle="->"))          #      self_annotate4.draggable() #drag the text if you want     
+     
      thismanager = plt.get_current_fig_manager()
      thismanager.window.setGeometry(50,100,640, 545)  
      #thismanager.window.SetPosition((2000, 0))
      plt.title(str(ids[k]))
      plt.show()
+     
      plt.savefig(newpath+'pth_'+str(ids[k])+'_final'+".ps")
      #plt.savefig(direcin+'pth_'+str(ids[k])+'_final'+".png")
      raw_input('press return to close final track window')
@@ -566,36 +602,47 @@ for k in range(len(ids)): #where "ids" is a sorted list of distinct ids and int
      #thismanager.window.SetPosition((2000, 0))
      plt.show()
      raw_input('press return to close uv window')
+     plt.savefig(newpath+'pth_'+str(ids[k])+'_final_UV'+".ps")
      plt.close()
      # close()
 
      # write out id,date,lat,lon,yrday0_gmt,temp, and depth_i
 
      depth=[float(i) for i in depth]
-     for i in range(len(time)):     
-        fido.write(str(ids[k]).rjust(10)+ " " +num2date(time[i]).replace(tzinfo=None).strftime('%d-%b-%Y:%H:%M')+" ")
-        fido.write(("%10.6f") %(lat[i]))
-        fido.write(" ")
-        fido.write(("%10.6f") %(lon[i]))
-        fido.write(" ")
-        fido.write(("%10.6f") %(yeardays[i]-1))
-        fido.write(" ")
-        fido.write(temp[i]+ " ")
-        fido.write(("%5.1f") %(depth[i]))
-        fido.write('\n')
-     if k<>len(ids)-1:        
-      raw_input("Press Enter to process next drifter")  
+     keep_data=raw_input('Do you want to keep this drifter data? y or n')
+     if keep_data=="Y" or keep_data=="y" or keep_data=="" :
+         for i in range(len(time)):     
+            fido.write(str(ids[k]).rjust(10)+ " " +num2date(time[i]).replace(tzinfo=None).strftime('%d-%b-%Y:%H:%M')+" ")
+            fido.write(("%10.6f") %(lat[i]))
+            fido.write(" ")
+            fido.write(("%10.6f") %(lon[i]))
+            fido.write(" ")
+            fido.write(("%10.6f") %(yeardays[i]-1))
+            fido.write(" ")
+            fido.write(temp[i]+ " ")
+            fido.write(("%5.1f") %(depth[i]))
+            fido.write('\n')   
 
-     whetherlog=raw_input('Do you want to keep this log? [default=y]') or "y"
-     if whetherlog=="Y" or whetherlog=="y" :
-        fid.write(tempochunk0)
-        fid.write(tempochunk1)
-        fid.write(tempochunk2)
-        fid.write(tempochunk3)
-        print 'log has been saved.'
+         print 'drifter data'+str(ids[k])+' has been saved.'
+     elif keep_data=='n':
+         print str(ids[k])+' discarded' 
+     whetherlog=raw_input('Do you want to keep this log? [default=y]')
+     
+     if whetherlog=="Y" or whetherlog=="y" or whetherlog=='' :
+             fid.write(tempochunk0)
+             fid.write(tempochunk1)
+             fid.write(tempochunk2)
+             fid.write(tempochunk3)
+             print 'log saved'
      else:
-        print 'log discarded' 
+             print 'log' +str(ids[k])+' discarded'
+            
+     if k<>len(ids)-1:        
+        raw_input("Press Enter to process next drifter")  
 fido.close()
 fid.close()
 fidids.close()
-     
+'''
+    # whetherlog=raw_input('Do you want to keep this log? [default=y]')
+    # if whetherlog=="Y" or whetherlog=="y" :
+'''  
