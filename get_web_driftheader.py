@@ -18,8 +18,8 @@ from conversions import distance,dm2dd
 import numpy as np
 ###################################
 ## HARDCODES
-inputfile="/data5/jmanning/drift/sqldump_header_dec2015.dat"
-outputfile="/data5/jmanning/drift/drift2header_dec2015.out"
+inputfile="sqldump_header_apr2016.dat"
+outputfile="drift2header_apr2016.out"
 ##################################
 
 def get_drifter_type(string):
@@ -108,7 +108,7 @@ def get_w_depth(xi,yi):  #xi:lon  yi:lat
     return depth_finally
     
 
-f = urllib.urlopen("http://www.nefsc.noaa.gov/drifter/")
+f = urllib.urlopen("http://www.nefsc.noaa.gov/drifter/index_2015.html")
 f2= open(inputfile)           #you may need to change this path
 data_raw=f2.readlines()
 data_raw_id=[int(data_raw[s][:10]) for s in range(len(data_raw))] # list of  ids missing in header
@@ -147,11 +147,11 @@ for i in range(len(drift_html)):
         print drift_html[i]
         data_all.append(list(df.iloc[0])) # gets first id
         # now get all the info about this deployment id
-        data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8]])
+        data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8],drift_html[i].split('_')[1]])
         for n in range(1,len(df)):
             if list(df.iloc[n])[0]<>list(df.iloc[n-1])[0]: # finds other id 
                 data_all.append(list(df.iloc[n]))
-                data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8]])
+                data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8],drift_html[i].split('_')[1]])
 lis=[] # distinct ids from the csv file
 for x in range(len(data_all)):
     lis.append(int(data_all[x][0]))
@@ -173,9 +173,9 @@ for p in range(len(data_all)): # for each id we got from data files
             lon_start.append(data_raw[q][0:data_raw[q].index('\n')].split(' ')[3])
             #start_depth.append(round(get_w_depth([float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[3])],[float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[4])])[0][0],1))
             start_depth.append('null')
-            start_date.append(num2date(date2num(dt.datetime(int(data_raw[q][0:data_raw[q].index('\n')].split(' ')[1]),1,1))+float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[2])).strftime("%d-%b-%Y:%H%M"))
-            deployer.append(data_html[p][1])
-            institute.append(data_html[p][0])
+            start_date.append(num2date(date2num(dt.datetime(int(data_raw[q][0:data_raw[q].index('\n')].split(' ')[1])+2000,1,1))+float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[2])).strftime("%d-%b-%Y:%H%M"))
+            deployer.append(data_html[p][1].split(' ')[0].split('/')[0])
+            institute.append(data_html[p][8].upper())
             drift_type.append(data_html[p][6])
             #project.append
             ndays.append(round(float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[6]),1))
