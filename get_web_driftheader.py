@@ -18,8 +18,8 @@ from conversions import distance,dm2dd
 import numpy as np
 ###################################
 ## HARDCODES
-inputfile="sqldump_header_apr2016.dat"
-outputfile="drift2header_apr2016.out"
+inputfile="sqldump_header_jan2017.dat"
+outputfile="drift2header_jan2017.out"
 ##################################
 
 def get_drifter_type(string):
@@ -108,7 +108,7 @@ def get_w_depth(xi,yi):  #xi:lon  yi:lat
     return depth_finally
     
 
-f = urllib.urlopen("http://www.nefsc.noaa.gov/drifter/index_2015.html")
+f = urllib.urlopen("http://www.nefsc.noaa.gov/drifter/")
 f2= open(inputfile)           #you may need to change this path
 data_raw=f2.readlines()
 data_raw_id=[int(data_raw[s][:10]) for s in range(len(data_raw))] # list of  ids missing in header
@@ -136,22 +136,41 @@ for tr in rows:
         texte_bu = texte_bu.encode('utf-8')
         texte_bu = texte_bu.strip()
         tables.append(texte_bu)
-tables=tables[9:] # get rid of the header line
+tables=tables[10:] # get rid of the header line
 data_all=[]
 data_html=[]
+#drift_html=list(set(drift_html))
 for i in range(len(drift_html)):
-    if tables[9*i+6]=='done':     #find the table that we need. 
+    if tables[10*i+7]=='done':     #find the table that we need. 
         df=pd.read_csv('http://www.nefsc.noaa.gov/drifter/'+drift_html[i])
         if len(df)==0:
             continue
         print drift_html[i]
         data_all.append(list(df.iloc[0])) # gets first id
         # now get all the info about this deployment id
-        data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8],drift_html[i].split('_')[1]])
+        if str(int(df.iloc[0][0])) in tables[10*i+9]:
+            for s in tables[10*i+9].split(';'):
+                if str(int(list(df.iloc[0])[0])) in s:
+                    print '111111111111111111111111111111111111111111111111111111111111111111111'
+                    data_html.append([tables[10*i],tables[10*i+1],tables[10*i+2],tables[10*i+3],tables[10*i+4],tables[10*i+5],get_drifter_type(tables[10*i+7]),tables[10*i+8],drift_html[i].split('_')[1],s])
+                    
+        else:
+            
+            data_html.append([tables[10*i],tables[10*i+1],tables[10*i+2],tables[10*i+3],tables[10*i+4],tables[10*i+5],get_drifter_type(tables[10*i+7]),tables[10*i+8],drift_html[i].split('_')[1],tables[10*i+9]])
+        
         for n in range(1,len(df)):
             if list(df.iloc[n])[0]<>list(df.iloc[n-1])[0]: # finds other id 
                 data_all.append(list(df.iloc[n]))
-                data_html.append([tables[9*i],tables[9*i+1],tables[9*i+2],tables[9*i+3],tables[9*i+4],tables[9*i+5],get_drifter_type(tables[9*i+7]),tables[9*i+8],drift_html[i].split('_')[1]])
+                if str(int(df.iloc[n][0])) in tables[10*i+9]:
+                    for s in tables[10*i+9].split(';'):
+                            if str(int(list(df.iloc[n])[0])) in s:
+                                print 
+                                data_html.append([tables[10*i],tables[10*i+1],tables[10*i+2],tables[10*i+3],tables[10*i+4],tables[10*i+5],get_drifter_type(tables[10*i+7]),tables[10*i+8],drift_html[i].split('_')[1],s])
+                                
+                else:
+                        
+                    data_html.append([tables[10*i],tables[10*i+1],tables[10*i+2],tables[10*i+3],tables[10*i+4],tables[10*i+5],get_drifter_type(tables[10*i+7]),tables[10*i+8],drift_html[i].split('_')[1],tables[10*i+9]])
+                #data_html.append([tables[10*i],tables[10*i+1],tables[10*i+2],tables[10*i+3],tables[10*i+4],tables[10*i+5],get_drifter_type(tables[10*i+7]),tables[10*i+8],drift_html[i].split('_')[1]])
 lis=[] # distinct ids from the csv file
 for x in range(len(data_all)):
     lis.append(int(data_all[x][0]))
@@ -165,8 +184,9 @@ for i in range(len(lis)):
         num1+=1
 idd,lat_start,lon_start,start_date,deployer,institute,project,ndays,notes,esn,end_date,pi,yrday0_gmt,lat_end,lon_end,depth,drift_type,start_depth,manufacturer=[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
 dict_data_raw={}
-for p in range(len(data_all)): # for each id we got from data files
-    for q in range(len(data_raw_id)): # for each id we got from sqldump
+for q in range(len(data_raw_id)): # for each id we got from sqldump
+    for p in range(len(data_all)): # for each id we got from data files
+
         if lis[p]==data_raw_id[q]: # where "lis" is the integer version of data_all
             idd.append(lis[p])
             lat_start.append(data_raw[q][0:data_raw[q].index('\n')].split(' ')[4])
@@ -177,6 +197,7 @@ for p in range(len(data_all)): # for each id we got from data files
             deployer.append(data_html[p][1].split(' ')[0].split('/')[0])
             institute.append(data_html[p][8].upper())
             drift_type.append(data_html[p][6])
+            print data_html[p][-1]
             #project.append
             ndays.append(round(float(data_raw[q][0:data_raw[q].index('\n')].split(' ')[6]),1))
             notes.append(data_html[p][-1].replace(",", ";"))
@@ -191,6 +212,7 @@ for p in range(len(data_all)): # for each id we got from data files
             lat_end.append(data_raw[q][0:data_raw[q].index('\n')].split(' ')[8])
             lon_end.append(data_raw[q][0:data_raw[q].index('\n')].split(' ')[7])
             depth.append(data_raw[q][0:data_raw[q].index('\n')].split(' ')[5])
+            continue
             
 f = open(outputfile, 'w')  
 f.writelines('id'+','+'yrday0_gmt'+','+'lat_start'+','+'lon_start'+','+'depth_bottom'+','+'start_date'+','+'drogue_depth_start'+','+'drogue_depth_end'+','+'depth'+','+'project'+','+'institute'+','+'pi'+','+'deployer'+','+'type'+','+'manufacturer'+','+'communication'+','+'accuracy'+','+'esn'+','+'yeardays'+','+'notes'+' \n') 
